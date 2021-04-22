@@ -1,11 +1,12 @@
 module Test.Examples where
 
 import Prelude
+
 import Control.MonadZero (guard)
 import Data.Array (concatMap, filter, null, tail, (..), (:))
 import Data.Foldable (product)
-import Data.Maybe (fromMaybe)
-import Data.Path (Path, ls)
+import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Path (Path, filename, ls)
 
 fact :: Int -> Int
 fact 0 = 1

@@ -3,9 +3,10 @@ module Test.MySolutions where
 import Prelude
 
 import Control.MonadZero (guard)
-import Data.Array (filter, head, length, null, tail, (..))
+import Data.Array (cons, filter, foldl, head, length, null, tail, (..))
 import Data.Maybe (fromMaybe)
-import Test.Examples (factors)
+import Data.Path (Path(..))
+import Test.Examples (allFiles, factors)
 
 -- Note to reader: Add your solutions to this file
 isEven :: Int -> Boolean
@@ -53,3 +54,32 @@ triples n = do
   c <- b .. n
   guard $ (a * a + b * b) == (c * c)
   return [a, b, c]
+
+factorize :: Int -> Array Int
+factorize n = go n 2 []
+  where
+    go :: Int -> Int -> Array Int -> Array Int
+    go n p acc =
+      if n == p then cons p acc
+      else if (mod n p) == 0 then go (n/p) (p+1) (cons p acc)
+      else go n (p+1) acc
+
+allTrue :: Array Boolean -> Boolean
+allTrue = foldl (\r b -> r && b) true
+
+fibTailRec :: Int -> Int
+fibTailRec n = go 0 0 1
+  where
+    go x n1 n2 =
+      if x == n
+        then n2
+        else go (x + 1) n2 (n1 + n2)
+
+reverse :: forall a. Array a -> Array a
+reverse = foldl (flip cons) []
+
+onlyFiles :: Path -> Array Path
+onlyFiles root = filter isFile $ allFiles root
+  where
+    isFile (File _ _) = true
+    isFile (Directory _ _) = false
